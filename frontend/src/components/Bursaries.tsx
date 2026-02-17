@@ -59,6 +59,13 @@ const bursaries = [
     description:
       "A scholarship for academically strong, motivated students from disadvantaged backgrounds. Offers tuition support, mentoring, and personal development. Apply on the Sikelela platform. Perfect for learners who show leadership and consistency.",
   },
+  {
+    id: 9,
+    logoKey: "Mastercard Foundation",
+    displayTitle: "Mastercard Foundation",
+    description:
+      "The Mastercard Foundation works with partners to provide education, employment, and financial inclusion for young people in Africa. Their scholarship and youth employment programmes support students and young professionals across the continent.",
+  },
 ];
 
 const logoMap: Record<string, string> = {
@@ -70,6 +77,7 @@ const logoMap: Record<string, string> = {
   "University of Cape Town": "/images/uctlogo.png",
   "ISFAP": "/images/isfaplogo.png",
   "Sikelela Scholars": "/images/michealandsusanlogo.png",
+  "Mastercard Foundation": "/images/mastercardfoundation.jpeg",
 };
 
 const Bursaries = () => {
