@@ -121,6 +121,11 @@ All colors MUST be HSL.
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold tracking-tight;
   }
+
+  /* Anchor targets sit below fixed navbar */
+  [id] {
+    scroll-margin-top: 5rem;
+  }
 }
 
 @layer utilities {
@@ -129,11 +134,20 @@ All colors MUST be HSL.
   }
   
   .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-accent/10 hover:border-accent/30;
   }
   
   .glass {
     @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
+
+  .pattern-dots {
+    background-image: radial-gradient(hsl(var(--muted-foreground) / 0.15) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 }
 

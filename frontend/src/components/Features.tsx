@@ -36,39 +36,38 @@ const features = [
 
 const Features = () => {
   return (
-    <section id="features" className="py-20 lg:py-32 bg-secondary/30">
+    <section id="features" className="py-12 sm:py-20 lg:py-32 bg-secondary/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4 animate-fade-in-up">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+        {/* Section Header - compact on mobile */}
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-16 space-y-2 sm:space-y-4 animate-fade-in-up">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
             Everything you need to{" "}
             <span className="text-gradient">succeed</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-sm sm:text-lg text-muted-foreground px-0 sm:px-0">
             A comprehensive platform designed to make learning accessible, effective, and enjoyable for everyone.
           </p>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {/* Features Grid - 2 cols on mobile, 2 on sm, 3 on lg */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {features.map((feature, index) => (
             <Card
               key={feature.title}
-              className="hover-lift border-border/50 bg-background/50 backdrop-blur-sm"
+              className="group card-hover border-border/50 bg-card/80 backdrop-blur-sm animate-fade-in-up opacity-0 p-4 sm:p-0"
               style={{
-                animationDelay: `${index * 0.1}s`,
-                animation: "fade-in-up 0.6s ease-out forwards",
-                opacity: 0,
+                animationDelay: `${index * 80}ms`,
+                animationFillMode: "forwards",
               }}
             >
-              <CardHeader>
-                <div className="h-12 w-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
-                  <feature.icon className="h-6 w-6 text-accent" />
+              <CardHeader className="p-0 sm:p-6 pb-2 sm:pb-6">
+                <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg sm:rounded-xl bg-accent/10 flex items-center justify-center mb-3 sm:mb-4 transition-colors group-hover:bg-accent/20 shrink-0">
+                  <feature.icon className="h-5 w-5 sm:h-6 sm:w-6 text-accent" />
                 </div>
-                <CardTitle className="text-xl">{feature.title}</CardTitle>
+                <CardTitle className="text-base sm:text-xl">{feature.title}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base leading-relaxed">
+              <CardContent className="p-0 sm:p-6 sm:pt-0">
+                <CardDescription className="text-sm sm:text-base leading-relaxed text-muted-foreground line-clamp-3 sm:line-clamp-none">
                   {feature.description}
                 </CardDescription>
               </CardContent>

@@ -1,3 +1,4 @@
+import Logo from "@/components/Logo";
 import { Facebook, Twitter, Instagram, Linkedin, Mail } from "lucide-react";
 
 const Footer = () => {
@@ -7,38 +8,42 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
-            <a href="/" className="text-2xl font-bold mb-4 block">
-              <span className="text-gradient">123tutors</span>
+            <a
+              href="/"
+              className="mb-4 block focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-md w-fit"
+              aria-label="123tutors home"
+            >
+              <Logo size="md" />
             </a>
             <p className="text-sm text-muted-foreground mb-4">
               Empowering students across South Africa with personalized learning and expert tutoring.
             </p>
             {/* Social Links */}
             <div className="flex gap-3">
-              <a 
-                href="#" 
-                className="h-9 w-9 rounded-md bg-secondary hover:bg-accent hover:text-white transition-colors flex items-center justify-center"
+              <a
+                href="#"
+                className="h-9 w-9 rounded-md bg-secondary hover:bg-accent hover:text-accent-foreground transition-colors flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 aria-label="Facebook"
               >
                 <Facebook className="h-4 w-4" />
               </a>
-              <a 
-                href="#" 
-                className="h-9 w-9 rounded-md bg-secondary hover:bg-accent hover:text-white transition-colors flex items-center justify-center"
+              <a
+                href="#"
+                className="h-9 w-9 rounded-md bg-secondary hover:bg-accent hover:text-accent-foreground transition-colors flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 aria-label="Twitter"
               >
                 <Twitter className="h-4 w-4" />
               </a>
-              <a 
-                href="#" 
-                className="h-9 w-9 rounded-md bg-secondary hover:bg-accent hover:text-white transition-colors flex items-center justify-center"
+              <a
+                href="#"
+                className="h-9 w-9 rounded-md bg-secondary hover:bg-accent hover:text-accent-foreground transition-colors flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 aria-label="Instagram"
               >
                 <Instagram className="h-4 w-4" />
               </a>
-              <a 
-                href="#" 
-                className="h-9 w-9 rounded-md bg-secondary hover:bg-accent hover:text-white transition-colors flex items-center justify-center"
+              <a
+                href="#"
+                className="h-9 w-9 rounded-md bg-secondary hover:bg-accent hover:text-accent-foreground transition-colors flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-4 w-4" />
@@ -51,7 +56,7 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Product</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
+                <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded">
                   Features
                 </a>
               </li>
@@ -162,7 +167,10 @@ const Footer = () => {
           </p>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Mail className="h-4 w-4" />
-            <a href="mailto:hello@123tutors.co.za" className="hover:text-foreground transition-colors">
+            <a
+              href="mailto:hello@123tutors.co.za"
+              className="hover:text-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded"
+            >
               hello@123tutors.co.za
             </a>
           </div>

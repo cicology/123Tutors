@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Link } from "react-router-dom";
 
 const bursaries = [
   {
@@ -75,37 +74,53 @@ const logoMap: Record<string, string> = {
 
 const Bursaries = () => {
   return (
-    <section id="bursaries" className="py-20 bg-secondary/20">
+    <section id="bursaries" className="py-14 sm:py-20 lg:py-28 bg-secondary/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+        <div className="text-center mb-10 sm:mb-16">
+          <p className="text-xs sm:text-sm font-medium text-accent mb-2">Trusted by leading programmes</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Bursary <span className="text-gradient">Clients</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-sm sm:text-lg max-w-2xl mx-auto">
             Bursary clients we work with to provide funded tutoring for their students.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
           {bursaries.map((bursary) => (
-            <Card key={bursary.id} className="group hover:shadow-lg transition-shadow relative overflow-hidden">
-              <CardContent className="pt-4">
-                <AspectRatio ratio={1}>
-                  <div className="relative h-full w-full">
-                    <img
-                      src={logoMap[bursary.logoKey] ?? "/placeholder.svg"}
-                      alt={bursary.logoKey}
-                      className="h-full w-full rounded-md object-contain bg-background border"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 rounded-md bg-background/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 text-sm text-muted-foreground overflow-y-auto">
-                      {bursary.description}
-                    </div>
+            <Card key={bursary.id} className="group card-hover relative overflow-hidden">
+              <CardContent className="p-2 sm:pt-4">
+                {/* Mobile: compact fixed-height logo area */}
+                <div className="relative h-[72px] sm:hidden rounded border bg-background overflow-hidden">
+                  <img
+                    src={logoMap[bursary.logoKey] ?? "/placeholder.svg"}
+                    alt={bursary.logoKey}
+                    className="h-full w-full object-contain p-1.5"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-background/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 text-xs text-muted-foreground overflow-y-auto">
+                    {bursary.description}
                   </div>
-                </AspectRatio>
+                </div>
+                {/* Desktop: square aspect ratio */}
+                <div className="hidden sm:block">
+                  <AspectRatio ratio={1}>
+                    <div className="relative h-full w-full">
+                      <img
+                        src={logoMap[bursary.logoKey] ?? "/placeholder.svg"}
+                        alt={bursary.logoKey}
+                        className="h-full w-full rounded-md object-contain bg-background border"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 rounded-md bg-background/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 text-sm text-muted-foreground overflow-y-auto">
+                        {bursary.description}
+                      </div>
+                    </div>
+                  </AspectRatio>
+                </div>
               </CardContent>
-              <CardHeader className="pt-1 pb-4">
-                <CardTitle className="text-sm text-center font-semibold">
+              <CardHeader className="p-2 pt-0 sm:pt-1 sm:pb-4 sm:px-6">
+                <CardTitle className="text-[10px] sm:text-sm text-center font-semibold leading-tight line-clamp-2 sm:line-clamp-none">
                   {bursary.displayTitle}
                 </CardTitle>
               </CardHeader>
@@ -113,10 +128,10 @@ const Bursaries = () => {
           ))}
         </div>
 
-        {/* Section-level CTA under bursary listings */}
-        <div className="mt-12 flex items-center justify-center">
-          <Button asChild size="lg" variant="accent">
-            <Link to="/bursary-signup">Bursary Sign Up</Link>
+        {/* Section-level CTA - does not navigate */}
+        <div className="mt-8 sm:mt-12 flex items-center justify-center">
+          <Button size="lg" variant="accent" type="button" className="h-10 px-6 sm:h-12 sm:px-8">
+            Bursary Sign Up
           </Button>
         </div>
       </div>

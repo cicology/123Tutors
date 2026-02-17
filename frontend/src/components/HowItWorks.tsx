@@ -1,5 +1,4 @@
-import { Search, UserCheck, BookOpen, GraduationCap } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search, UserCheck, BookOpen } from "lucide-react";
 
 const steps = [
   {
@@ -42,26 +41,25 @@ const HowItWorks = () => {
           {steps.map((step, index) => (
             <div
               key={step.step}
-              className="relative group"
+              className="relative group animate-fade-in-up opacity-0"
               style={{
-                animationDelay: `${index * 0.15}s`,
-                animation: "fade-in-up 0.6s ease-out forwards",
-                opacity: 0,
+                animationDelay: `${index * 120}ms`,
+                animationFillMode: "forwards",
               }}
             >
-              {/* Connector Line (hidden on mobile, last item) */}
+              {/* Connector Line */}
               {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-16 left-full w-full h-0.5 bg-border -translate-x-1/2 z-0" />
+                <div className="hidden lg:block absolute top-14 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-0.5 bg-gradient-to-r from-accent/30 to-transparent z-0" aria-hidden />
               )}
 
-              <div className="relative bg-background border border-border rounded-2xl p-8 space-y-4 hover-lift z-10">
+              <div className="relative bg-card border border-border rounded-2xl p-8 space-y-4 card-hover z-10">
                 {/* Step Number */}
                 <div className="text-6xl font-bold text-accent/10 absolute top-4 right-6 select-none">
                   {step.step}
                 </div>
 
                 {/* Icon */}
-                <div className="h-14 w-14 rounded-xl bg-accent/10 flex items-center justify-center relative z-10">
+                <div className="h-14 w-14 rounded-xl bg-accent/10 flex items-center justify-center relative z-10 transition-colors group-hover:bg-accent/20">
                   <step.icon className="h-7 w-7 text-accent" />
                 </div>
 
