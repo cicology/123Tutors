@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import StatCard from "../../components/ui/StatCard";
+import Seo from "../../components/seo/Seo";
 import { api } from "../../services/api";
 
 function safeArray(data) {
@@ -65,6 +66,10 @@ export default function AnalyticsPage() {
 
   return (
     <section className="page-wrap">
+      <Seo
+        title="Analytics Dashboard"
+        description="Track revenue, profit, tutor payments, and marketing ROI for 123Tutors."
+      />
       <h1>Analytics</h1>
       <p>Revenue, profitability, marketing ROI, and tutor growth metrics.</p>
 

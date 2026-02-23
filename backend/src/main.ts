@@ -6,6 +6,12 @@ import helmet from 'helmet';
 import * as compression from 'compression';
 import { json, urlencoded } from 'express';
 
+function saveRawBody(req: unknown, _res: unknown, buf: Buffer): void {
+  if (buf.length) {
+    (req as { rawBody?: string }).rawBody = buf.toString('utf8');
+  }
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -48,7 +54,7 @@ async function bootstrap() {
   app.use(compression());
 
   // Configure body parsing for file uploads
-  app.use(json({ limit: '50mb' }));
+  app.use(json({ limit: '50mb', verify: saveRawBody }));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
 
   // Global validation pipe

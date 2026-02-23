@@ -5,6 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { createHmac } from 'crypto';
 import { InvoicesService } from '../invoices/invoices.service';
 import { TutorRequestsService } from '../tutor-requests/tutor-requests.service';
 import { VerifyPaystackPaymentDto } from './dto/verify-paystack-payment.dto';
@@ -27,6 +28,33 @@ interface PaystackVerifyResponse {
   };
 }
 
+interface PaystackWebhookPayload {
+  event?: string;
+  data?: {
+    reference?: string;
+    metadata?: {
+      invoiceUniqueId?: string;
+      requestUniqueId?: string;
+      requestId?: string;
+      [key: string]: unknown;
+    };
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+
+type VerifyPaystackPaymentResult = {
+  success: boolean;
+  verified: boolean;
+  message: string;
+  reference: string;
+  amountPaid: number;
+  currency: string;
+  invoiceUniqueId?: string;
+  requestUniqueId?: string;
+  paidAt?: string;
+};
+
 @Injectable()
 export class PaymentsService {
   private readonly logger = new Logger(PaymentsService.name);
@@ -45,17 +73,11 @@ export class PaymentsService {
     return secret;
   }
 
-  async verifyPaystackPayment(dto: VerifyPaystackPaymentDto): Promise<{
-    success: boolean;
-    verified: boolean;
-    message: string;
-    reference: string;
-    amountPaid: number;
-    currency: string;
-    invoiceUniqueId?: string;
-    requestUniqueId?: string;
-    paidAt?: string;
-  }> {
+  private buildExpectedWebhookSignature(rawBody: string, secret: string): string {
+    return createHmac('sha512', secret).update(rawBody).digest('hex');
+  }
+
+  async verifyPaystackPayment(dto: VerifyPaystackPaymentDto): Promise<VerifyPaystackPaymentResult> {
     const secret = this.getPaystackSecret();
     const verifyUrl = `https://api.paystack.co/transaction/verify/${encodeURIComponent(
       dto.reference,
@@ -134,6 +156,74 @@ export class PaymentsService {
       invoiceUniqueId,
       requestUniqueId: resolvedRequestUniqueId,
       paidAt: payload.data.paid_at,
+    };
+  }
+
+  async handlePaystackWebhook(
+    payload: PaystackWebhookPayload,
+    signature: string | undefined,
+    rawBody: string | undefined,
+  ): Promise<{
+    success: boolean;
+    received: boolean;
+    processed: boolean;
+    event: string;
+    message: string;
+    reference?: string;
+  }> {
+    if (!signature) {
+      throw new BadRequestException('Missing x-paystack-signature header');
+    }
+    if (!rawBody) {
+      throw new BadRequestException('Missing raw request body for signature verification');
+    }
+
+    const secret = this.getPaystackSecret();
+    const expectedSignature = this.buildExpectedWebhookSignature(rawBody, secret);
+    if (signature !== expectedSignature) {
+      throw new BadRequestException('Invalid Paystack webhook signature');
+    }
+
+    const event = String(payload?.event || 'unknown');
+    if (event !== 'charge.success') {
+      return {
+        success: true,
+        received: true,
+        processed: false,
+        event,
+        message: `Webhook event ignored: ${event}`,
+      };
+    }
+
+    const reference = payload?.data?.reference;
+    if (!reference) {
+      throw new BadRequestException('Paystack webhook payload is missing data.reference');
+    }
+
+    const metadata = payload?.data?.metadata || {};
+    const verifyResult = await this.verifyPaystackPayment({
+      reference,
+      invoiceUniqueId:
+        typeof metadata.invoiceUniqueId === 'string' ? metadata.invoiceUniqueId : undefined,
+      requestUniqueId:
+        typeof metadata.requestUniqueId === 'string'
+          ? metadata.requestUniqueId
+          : typeof metadata.requestId === 'string'
+            ? metadata.requestId
+            : undefined,
+    });
+
+    this.logger.log(
+      `Paystack webhook processed for ${verifyResult.reference} (verified=${verifyResult.verified})`,
+    );
+
+    return {
+      success: true,
+      received: true,
+      processed: verifyResult.verified,
+      event,
+      message: verifyResult.message,
+      reference: verifyResult.reference,
     };
   }
 }

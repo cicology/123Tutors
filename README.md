@@ -36,6 +36,10 @@ Configure these before running:
 - SMTP (`SMTP_*`) for invoice emails
 - Supabase Storage S3 vars (`SUPABASE_S3_*`) if file upload is needed
 
+Production checklist:
+
+- See `docs/PRODUCTION_ENV_CHECKLIST.md`
+
 ## Run Locally
 
 Backend (JavaScript runtime):
@@ -62,3 +66,4 @@ npm run dev:api:ts
 - `POST /tutor-job-notifications/match/:requestUniqueId`: smart matching generation
 - `POST /invoices/:uniqueId/send`: manual PDF email send
 - `POST /invoices`: supports auto-send invoice flow
+- `POST /payments/paystack/webhook`: Paystack signed webhook processing
