@@ -208,6 +208,122 @@ a:hover {
   color: var(--muted);
 }
 
+.hero-workflow-preview {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.hero-workflow-chip {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-muted);
+  padding: 9px 11px;
+}
+
+.hero-workflow-chip span {
+  display: block;
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-dark);
+}
+
+.hero-workflow-chip p {
+  margin: 3px 0 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.workflow-shell {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 0, 136, 0.11), transparent 42%),
+    var(--surface);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  display: grid;
+  gap: 14px;
+}
+
+.workflow-head {
+  display: grid;
+  gap: 8px;
+}
+
+.workflow-list {
+  display: grid;
+  gap: 10px;
+}
+
+.workflow-step-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+  padding: 12px;
+  display: flex;
+  gap: 14px;
+}
+
+.workflow-step-side {
+  width: 92px;
+  flex-shrink: 0;
+  display: grid;
+  gap: 7px;
+  justify-items: center;
+  position: relative;
+}
+
+.workflow-step-card:not(:last-child) .workflow-step-side::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 44px;
+  bottom: -24px;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(255, 0, 136, 0.33), rgba(255, 0, 136, 0.07));
+}
+
+.workflow-step-index {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+}
+
+.workflow-step-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: var(--accent-dark);
+  border: 1px solid rgba(255, 0, 136, 0.25);
+  background: rgba(255, 0, 136, 0.11);
+}
+
+.workflow-step-main {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.workflow-step-main h3 {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.workflow-step-main p {
+  margin: 0;
+  color: var(--muted);
+}
+
 .inline-link {
   display: inline-flex;
   align-items: center;
@@ -648,6 +764,23 @@ a:hover {
   .table-head,
   .table-row {
     grid-template-columns: 1fr;
+  }
+
+  .workflow-step-card {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .workflow-step-side {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .workflow-step-card:not(:last-child) .workflow-step-side::after {
+    display: none;
   }
 
   .inline-form {
