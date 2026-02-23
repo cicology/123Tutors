@@ -1,0 +1,13 @@
+{
+  "name": "123tutors-platform",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "dev:web": "npm --prefix frontend start",
+    "dev:api": "npm --prefix backend run start:dev",
+    "dev:api:ts": "npm --prefix backend run start:ts:dev",
+    "build:web": "npm --prefix frontend run build",
+    "build:api": "npm --prefix backend run build"
+  }
+}
