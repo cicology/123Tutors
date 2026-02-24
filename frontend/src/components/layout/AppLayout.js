@@ -39,7 +39,7 @@ export default function AppLayout({ children }) {
             <NavLink to="/signup/tutor" className={navClassName}>
               Tutor Signup
             </NavLink>
-            {role === "student" ? (
+            {(role === "student" || role === "user") ? (
               <NavLink to="/dashboard/student" className={navClassName}>
                 Student Dashboard
               </NavLink>
@@ -49,13 +49,23 @@ export default function AppLayout({ children }) {
                 Tutor Dashboard
               </NavLink>
             ) : null}
-            {(role === "admin" || role === "bursary_admin") ? (
+            {role === "admin" ? (
               <>
                 <NavLink to="/dashboard/admin" className={navClassName}>
                   Admin Dashboard
                 </NavLink>
                 <NavLink to="/dashboard/analytics" className={navClassName}>
-                  Analytics
+                  Admin Analytics
+                </NavLink>
+              </>
+            ) : null}
+            {role === "bursary_admin" ? (
+              <>
+                <NavLink to="/dashboard/bursary" className={navClassName}>
+                  Bursary Dashboard
+                </NavLink>
+                <NavLink to="/dashboard/analytics" className={navClassName}>
+                  Bursary Analytics
                 </NavLink>
               </>
             ) : null}

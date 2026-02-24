@@ -8,7 +8,7 @@ const roleRoutes = {
   student: "/dashboard/student",
   tutor: "/dashboard/tutor",
   admin: "/dashboard/admin",
-  bursary_admin: "/dashboard/admin",
+  bursary_admin: "/dashboard/bursary",
 };
 
 export default function LoginPage() {

@@ -26,8 +26,13 @@ function formatMoney(amount) {
   return `R ${Number(amount || 0).toFixed(2)}`;
 }
 
-export default function AdminDashboardPage() {
+function normalizeText(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+export default function AdminDashboardPage({ mode = "admin" }) {
   const { user } = useAuth();
+  const isBursaryMode = mode === "bursary";
   const [activeTab, setActiveTab] = useState("home");
   const [requests, setRequests] = useState([]);
   const [tutors, setTutors] = useState([]);
@@ -49,6 +54,29 @@ export default function AdminDashboardPage() {
   });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const bursaryScope = normalizeText(user?.bursaryName);
+
+  const filterRowsByBursary = useCallback(
+    (rows) => {
+      if (!isBursaryMode) {
+        return rows;
+      }
+      if (!bursaryScope) {
+        return [];
+      }
+      return rows.filter((row) => normalizeText(row?.bursaryName) === bursaryScope);
+    },
+    [isBursaryMode, bursaryScope],
+  );
+
+  const dashboardTitle = isBursaryMode ? "Bursary Dashboard" : "Admin Dashboard";
+  const dashboardDescription = isBursaryMode
+    ? "Manage bursary-linked requests, tutors, invoicing, and operations in one place."
+    : "Manage tutor requests, allocations, invoicing, payroll, and operations on 123Tutors.";
+  const portalLabel = isBursaryMode ? "Bursary Portal" : "Admin Portal";
+  const portalDescription = isBursaryMode
+    ? "Manage requests, tutors, finance, and operations for your bursary."
+    : "Manage requests, tutors, finance, and operations from one control center.";
 
   const loadDashboard = useCallback(async () => {
     try {
@@ -60,19 +88,22 @@ export default function AdminDashboardPage() {
         api.getNotifications(user?.bursaryName || ""),
       ]);
 
-      const requestRows = safeArray(requestsResult);
+      const requestRows = filterRowsByBursary(safeArray(requestsResult));
+      const tutorRows = filterRowsByBursary(safeArray(tutorsResult));
+      const orderRows = filterRowsByBursary(safeArray(ordersResult));
+
       setRequests(requestRows);
-      setTutors(safeArray(tutorsResult));
-      setOrders(safeArray(ordersResult));
+      setTutors(tutorRows);
+      setOrders(orderRows);
       setNotifications(Array.isArray(noteResult) ? noteResult : []);
 
       if (stats?.totalRequests !== undefined) {
-        setMessage(`Dashboard synced: ${stats.totalRequests} total requests.`);
+        setMessage(`Dashboard synced: ${requestRows.length} requests in scope.`);
       }
     } catch (err) {
-      setError(err.message || "Failed to load admin dashboard.");
+      setError(err.message || `Failed to load ${dashboardTitle.toLowerCase()}.`);
     }
-  }, [user?.bursaryName]);
+  }, [dashboardTitle, filterRowsByBursary, user?.bursaryName]);
 
   useEffect(() => {
     loadDashboard();
@@ -199,7 +230,7 @@ export default function AdminDashboardPage() {
         paymentMethod: "manual_invoice",
         dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
         requestUniqueId: requestId,
-        notes: "Manual invoice from admin dashboard",
+        notes: `Manual invoice from ${dashboardTitle.toLowerCase()}`,
         autoSendEmail: true,
       });
 
@@ -271,24 +302,24 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const displayName = user?.email ? user.email.split("@")[0] : "Admin";
+  const displayName = user?.email ? user.email.split("@")[0] : (isBursaryMode ? "Bursary Admin" : "Admin");
 
   return (
     <>
       <Seo
-        title="Admin Dashboard"
-        description="Manage tutor requests, allocations, invoicing, payroll, and operations on 123Tutors."
+        title={dashboardTitle}
+        description={dashboardDescription}
       />
 
       <DashboardShell
-        portalLabel="Admin Portal"
-        title="Admin Dashboard"
-        description="Manage requests, tutors, finance, and operations from one control center."
+        portalLabel={portalLabel}
+        title={dashboardTitle}
+        description={portalDescription}
         navItems={NAV_ITEMS}
         activeTab={activeTab}
         onTabChange={setActiveTab}
         profileName={displayName}
-        profileMeta={user?.email || "admin@123tutors.co.za"}
+        profileMeta={user?.email || (isBursaryMode ? "bursary@123tutors.co.za" : "admin@123tutors.co.za")}
       >
         {error ? <p className="error-text">{error}</p> : null}
         {message ? <p className="success-text">{message}</p> : null}

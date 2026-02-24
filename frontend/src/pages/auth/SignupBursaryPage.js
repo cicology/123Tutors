@@ -24,7 +24,7 @@ export default function SignupBursaryPage() {
         uniqueId: api.uniqueId("UP_BURSARY"),
         bursaryName: form.bursaryName,
       });
-      navigate("/dashboard/admin");
+      navigate("/dashboard/bursary");
     } catch (err) {
       setError(err.message || "Failed to sign up bursary admin.");
     }

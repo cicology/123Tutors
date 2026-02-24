@@ -16,56 +16,61 @@ import Seo from "../../components/seo/Seo";
 const highlights = [
   {
     icon: GraduationCap,
-    title: "Smart Tutor Matching",
-    body: "Automatically matches student requests to tutors based on subject, level, availability, and location.",
-  },
-  {
-    icon: BriefcaseBusiness,
-    title: "Tutor Workflow",
-    body: "Applications, job notifications, student allocation, lesson logging, and payout visibility in one dashboard.",
-  },
-  {
-    icon: BarChart3,
-    title: "Admin + Analytics",
-    body: "End-to-end request operations, invoicing, payroll flow, and earnings/ROI analytics.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Payments + Auditability",
-    body: "Supports Paystack and EFT workflows with traceable references and operational controls.",
+    title: "Matched to Your Subjects",
+    body: "We find tutors who know your exact courses, school, or university programme — not just general subject areas.",
   },
   {
     icon: BookOpen,
-    title: "Student Experience",
-    body: "Request tutors, view bookings, approve lessons, add hours, and track remaining hours clearly.",
+    title: "School & University Support",
+    body: "From Grade 8 to postgraduate level, we cover a wide range of subjects across South African institutions.",
+  },
+  {
+    icon: BriefcaseBusiness,
+    title: "Online & In-Person",
+    body: "Choose the format that suits you — one-on-one sessions online or face-to-face at your preferred location.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Verified Tutors",
+    body: "Every tutor on our platform is reviewed and vetted before being matched to students.",
+  },
+  {
+    icon: BarChart3,
+    title: "Bursary Programmes",
+    body: "We work with leading bursary organisations to provide dedicated academic support for sponsored students.",
+  },
+  {
+    icon: CheckCircle2,
+    title: "Secure Payments",
+    body: "Pay safely by card or EFT. Your payment is only processed once your tutor is confirmed.",
   },
 ];
 
 const workflowSteps = [
   {
     icon: ClipboardList,
-    title: "Submit Tutor Request",
-    body: "Students or parents share course needs, hours, preferred format, and location in one request.",
+    title: "Submit Your Request",
+    body: "Tell us your subjects, how many hours you need, your institution, and whether you prefer online or in-person sessions.",
   },
   {
     icon: Search,
-    title: "Smart Match + Notifications",
-    body: "Matching logic scores tutor fit by subject, level, availability, and sends targeted tutor alerts.",
+    title: "We Find Your Tutor",
+    body: "Our matching process identifies tutors suited to your specific subjects, level, and location — and notifies them directly.",
   },
   {
     icon: BookOpen,
-    title: "Book and Pay",
-    body: "Student confirms tutor allocation and completes payment through Paystack or EFT controls.",
+    title: "Confirm and Pay",
+    body: "Review your matched tutor, confirm the booking, and pay securely via card or EFT.",
   },
   {
     icon: CheckCircle2,
-    title: "Lessons and Approvals",
-    body: "Tutors log lessons, students review delivery, and approved sessions feed the payout pipeline.",
+    title: "Start Learning",
+    body: "Sessions begin on your schedule. Your tutor logs each lesson, and you approve hours as you go.",
   },
   {
     icon: BarChart3,
-    title: "Payout + Reporting",
-    body: "Admin tracks invoices, tutor payout readiness, and end-to-end operational analytics.",
+    title: "Track Your Progress",
+    body: "See your remaining hours, session history, and invoices in your student dashboard at any time.",
   },
 ];
 
@@ -74,17 +79,16 @@ export default function HomePage() {
     <div>
       <Seo
         title="Home"
-        description="123Tutors platform for tutor requests, tutor matching, bookings, payments, and operations."
+        description="123Tutors connects South African students with verified tutors for school, university, and bursary programmes. Request a tutor today."
       />
       <section className="hero">
         <div className="hero-grid">
           <div>
-            <p className="eyebrow">123tutors platform</p>
-            <h1>From tutor request to payout, in one JavaScript platform.</h1>
+            <p className="eyebrow">Tutoring across South Africa</p>
+            <h1>Find the right tutor, matched to your subjects.</h1>
             <p className="hero-copy">
-              This platform now combines public request flows, student/tutor/admin dashboards,
-              payment workflows, invoicing hooks, and operational analytics while preserving your
-              current visual direction.
+              123Tutors connects students with verified tutors for school and university courses.
+              Online or in-person, one-on-one or group — get started with a simple request.
             </p>
             <div className="hero-actions">
               <Link to="/request" className="btn btn-accent">
@@ -97,9 +101,9 @@ export default function HomePage() {
           </div>
 
           <div className="hero-card">
-            <h3>Workflow Snapshot</h3>
+            <h3>How It Works</h3>
             <p className="muted-text">
-              The core flow follows a clear multi-step journey from request intake to tutor payout.
+              From your first request to your first session — here's how 123Tutors works.
             </p>
             <div className="hero-workflow-preview">
               {workflowSteps.slice(0, 3).map((step, index) => (
@@ -109,8 +113,8 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <Link to="/dashboard/admin" className="inline-link">
-              Open admin operations <ArrowRight size={14} />
+            <Link to="/request" className="inline-link">
+              Request your tutor now <ArrowRight size={14} />
             </Link>
           </div>
         </div>
@@ -120,10 +124,9 @@ export default function HomePage() {
         <div className="workflow-shell">
           <div className="workflow-head">
             <p className="eyebrow">How it works</p>
-            <h2 className="section-title">123Tutors workflow UI</h2>
+            <h2 className="section-title">Get started in five steps</h2>
             <p className="muted-text">
-              This workflow section mirrors the step-based UI style from the Jiffy Tutors reference: visual stages,
-              clear progression, and operational detail at each point.
+              We make it easy to go from submitting a request to having your first tutoring session booked and confirmed.
             </p>
           </div>
           <div className="workflow-list">
@@ -149,7 +152,7 @@ export default function HomePage() {
       </section>
 
       <section className="page-wrap">
-        <h2 className="section-title">Platform modules</h2>
+        <h2 className="section-title">Why students choose 123Tutors</h2>
         <div className="card-grid three">
           {highlights.map((item) => {
             const Icon = item.icon;
