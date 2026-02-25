@@ -1,20 +1,10 @@
-# 123Tutors Platform (JavaScript Frontend + JavaScript Runtime Backend)
+# 123Tutors Platform (Next.js + NestJS + Supabase Postgres)
 
-This repo is now set up as a JavaScript platform:
+This repository is now organized for the migration off Bubble:
 
-- `frontend/`: React JavaScript app (`react-scripts`, no Vite)
-- `backend/`: integrated dashboard backend with JavaScript runtime output in `backend/dist`
-
-Implemented platform areas include:
-
-- Request form
-- Student/parent signup
-- Tutor signup and tutor dashboard
-- Student dashboard
-- Admin dashboard
-- Analytics dashboard
-- Smart tutor matching + tutor notifications
-- Invoice PDF + email send endpoints
+- `web/`: Next.js bursary dashboard (imported from `123bursary-dashboard-main`)
+- `backend/`: NestJS API (integrated superset of `123tutors-dashboard-backend-main`)
+- `frontend/`: legacy CRA frontend kept for reference during migration
 
 ## Install
 
@@ -22,48 +12,91 @@ Implemented platform areas include:
 npm run install:all
 ```
 
+Optional legacy frontend install:
+
+```bash
+npm run install:web:legacy
+```
+
 ## Environment Setup
 
-1. Copy `frontend/.env.example` to `frontend/.env`
+1. Copy `web/.env.example` to `web/.env.local`
 2. Copy `backend/.env.example` to `backend/.env`
 
-Configure these before running:
+Required web env:
 
-- Database (`DB_*`)
-- JWT (`JWT_SECRET`)
-- Paystack (frontend public key)
-- Google Maps key
-- SMTP (`SMTP_*`) for invoice emails
-- Supabase Storage S3 vars (`SUPABASE_S3_*`) if file upload is needed
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:8081`)
 
-Production checklist:
+Required backend env:
 
-- See `docs/PRODUCTION_ENV_CHECKLIST.md`
+- Database (`DB_*`) using Supabase Postgres credentials
+- `JWT_SECRET`
+- `CORS_ORIGIN` (typically `http://localhost:3000` in local dev)
+
+Optional backend env:
+
+- `DB_SYNCHRONIZE=true` for one-time schema bootstrap
+- Paystack, SMTP, and Supabase storage vars as needed
 
 ## Run Locally
 
-Backend (JavaScript runtime):
+Terminal 1 (API):
 
 ```bash
 npm run dev:api
 ```
 
-Frontend:
+Terminal 2 (Next.js web):
 
 ```bash
 npm run dev:web
 ```
 
-Optional backend TypeScript watch mode (if needed for source-level edits):
+Legacy web app (if needed):
 
 ```bash
-npm run dev:api:ts
+npm run dev:web:legacy
 ```
 
-## Key API Additions
+## Supabase Schema Bootstrap
 
-- `GET /admin/find-tutor`: real tutor candidate search
-- `POST /tutor-job-notifications/match/:requestUniqueId`: smart matching generation
-- `POST /invoices/:uniqueId/send`: manual PDF email send
-- `POST /invoices`: supports auto-send invoice flow
-- `POST /payments/paystack/webhook`: Paystack signed webhook processing
+To create backend tables in a fresh Supabase Postgres database from current entities:
+
+```bash
+npm run schema:bootstrap
+```
+
+This runs TypeORM `synchronize` once through `backend/src/scripts/bootstrap-schema.ts`.
+
+## Bubble Data Migration
+
+ETL scripts for Bubble -> Supabase are included in `backend/scripts/bubble-migration`.
+
+```bash
+npm run bubble:extract
+npm run bubble:transform
+MIGRATION_DRY_RUN=true npm run bubble:load
+MIGRATION_DRY_RUN=false npm run bubble:load
+```
+
+## Build
+
+```bash
+npm run build:api
+npm run build:web
+```
+
+## Integration Notes
+
+- The imported Next.js app now points to backend through `NEXT_PUBLIC_API_URL`.
+- API method mismatches were aligned (`PATCH` for lessons/invoices/student-progress updates).
+- Current backend includes everything from the downloaded backend plus extra production modules (for example payments/webhooks).
+
+## Migration Context
+
+- Live Bubble behavior and schema discovery were used to align API/UI parity.
+- Bubble object to backend module mapping is documented in `docs/BUBBLE_PARITY_MAP.md`.
+- Bubble API exposure should be locked down immediately before cutover.
+- See `docs/PRODUCTION_ENV_CHECKLIST.md` for production checks.

@@ -1,0 +1,6 @@
+bursary,studentEmail,studentNameAndSurname,year,university,course,studentIdNumber,phoneNumber,address,enrollmentDate,status
+NSFAS,john.doe@example.com,John Doe,2,University of Cape Town,Computer Science,12345678,+27123456789,Cape Town,2024-01-15,active
+Funza Lushaka,jane.smith@example.com,Jane Smith,1,University of Johannesburg,Engineering,87654321,+27123456790,Johannesburg,2024-01-20,active
+NSFAS,mike.wilson@example.com,Mike Wilson,3,University of Pretoria,Medicine,11223344,+27123456791,Pretoria,2024-01-25,active
+Funza Lushaka,sarah.brown@example.com,Sarah Brown,2,University of Witwatersrand,Law,55667788,+27123456792,Johannesburg,2024-02-01,active
+NSFAS,david.jones@example.com,David Jones,1,Stellenbosch University,Commerce,99887766,+27123456793,Stellenbosch,2024-02-05,active

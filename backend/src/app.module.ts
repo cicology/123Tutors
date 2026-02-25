@@ -47,6 +47,11 @@ import { PaymentsModule } from './payments/payments.module';
         // Parse DB_HOST to handle both JDBC URLs and plain hostnames
         const dbHost = configService.get('DB_HOST', 'localhost');
         let host = dbHost;
+        const nodeEnv = configService.get('NODE_ENV', 'development');
+        const synchronizeOverride = configService.get<string>('DB_SYNCHRONIZE');
+        const synchronize =
+          synchronizeOverride === 'true' ||
+          (synchronizeOverride !== 'false' && nodeEnv === 'development');
         
         // If DB_HOST contains a JDBC URL, extract the hostname
         if (dbHost.includes('jdbc:postgresql://')) {
@@ -65,8 +70,8 @@ import { PaymentsModule } from './payments/payments.module';
           password: configService.get('DB_PASSWORD', 'root'),
           database: configService.get('DB_DATABASE', 'booksdb'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: configService.get('NODE_ENV') === 'development',
-          logging: configService.get('NODE_ENV') === 'development',
+          synchronize,
+          logging: nodeEnv === 'development',
           retryAttempts: 3,
           retryDelay: 3000,
           // SSL configuration for production databases (like Render.com)
@@ -75,7 +80,8 @@ import { PaymentsModule } from './payments/payments.module';
             host.includes('render.com') ||
             host.includes('amazonaws.com') ||
             host.includes('heroku') ||
-            host.includes('supabase.co')
+            host.includes('supabase.co') ||
+            host.includes('supabase.com')
               ? {
             rejectUnauthorized: false
           }

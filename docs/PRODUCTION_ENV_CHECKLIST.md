@@ -2,14 +2,14 @@
 
 Use this checklist before deploying the platform.
 
-## 1. Frontend Env (`frontend/.env`)
+## 1. Next.js Web Env (`web/.env.local`)
 
 Required:
 
 ```env
-REACT_APP_API_URL=https://your-api-domain.com
-REACT_APP_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
-REACT_APP_PAYSTACK_PUBLIC_KEY=pk_live_xxxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_API_URL=https://your-api-domain.com
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ## 2. Backend Env (`backend/.env`)
@@ -73,7 +73,9 @@ In Paystack dashboard:
 
 1. Confirm Postgres credentials are valid and network-accessible by backend host.
 2. Confirm `123_bursary_images` bucket exists and allows intended read/write policy.
-3. Apply SQL migrations from `backend/migrations/` if schema is not yet in place.
+3. Create schema using one approach:
+   - apply SQL files from `backend/migrations/`
+   - or run `npm run schema:bootstrap` from repo root (one-time bootstrap from entities)
 
 ## 5. Smoke Tests
 

@@ -9,6 +9,8 @@ node_modules/
 # Build outputs
 dist/
 build/
+.next/
+tmp-sitecheck/
 
 # OS
 .DS_Store
@@ -26,3 +28,4 @@ npm-debug.log*
 
 # Uploads (backend)
 backend/uploads/
+backend/migration-data/

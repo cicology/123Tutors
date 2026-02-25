@@ -1,0 +1,6 @@
+import { redirect } from "next/navigation"
+
+export default function StudentDashboardAliasPage() {
+  redirect("/dashboard/student")
+}
+

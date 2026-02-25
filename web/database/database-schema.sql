@@ -1,0 +1,10 @@
+-- Source of truth for schema is backend TypeORM entities.
+-- Use one of the following approaches:
+--
+-- 1) Preferred (automatic):
+--    npm --prefix ../backend run schema:bootstrap
+--
+-- 2) Migration-based:
+--    Apply SQL files under backend/migrations/
+--
+-- This placeholder exists so onboarding docs in web/ remain valid.
