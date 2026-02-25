@@ -1,6 +1,9 @@
 {
-  "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key"
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_SUPABASE_URL": "https://dwhuhioxszupmxvgxhqb.supabase.co",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3aHVoaW94c3p1cG14dmd4aHFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDA4MjksImV4cCI6MjA4NzYxNjgyOX0.OlLOchB63b08BQpCMV-p12Swa97f58iMOH4ebx12gxM",
+      "NEXT_PUBLIC_API_URL": "https://one23tutors-dashboard-backend.onrender.com"
+    }
   }
 }
