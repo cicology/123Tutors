@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
-import { SupabaseAuthGuard } from './auth/supabase-auth.guard';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { UserProfilesModule } from './user-profiles/user-profiles.module';
 import { BankModule } from './bank/bank.module';
 import { BursaryNamesModule } from './bursary-names/bursary-names.module';
@@ -114,7 +114,7 @@ import { PaymentsModule } from './payments/payments.module';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: SupabaseAuthGuard,
+      useClass: JwtAuthGuard,
     },
   ],
 })
