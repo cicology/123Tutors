@@ -14,9 +14,14 @@ const {
 } = require("./utils");
 
 // Supabase configuration
-const SUPABASE_URL = "https://dwhuhioxszupmxvgxhqb.supabase.co";
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3aHVoaW94c3p1cG14dmd4aHFiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjA0MDgyOSwiZXhwIjoyMDg3NjE2ODI5fQ.GU8zo3xJYB3X4b6KDkXMY_73SCjsgvBgH4rIoL9jdDU";
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.SUPABASE_PUBLIC_SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+  throw new Error(
+    "SUPABASE_URL (or SUPABASE_PUBLIC_SUPABASE_URL) and SUPABASE_SERVICE_ROLE_KEY must be set for load-supabase.js",
+  );
+}
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 

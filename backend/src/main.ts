@@ -14,10 +14,31 @@ function saveRawBody(req: unknown, _res: unknown, buf: Buffer): void {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const isProduction = process.env.NODE_ENV === 'production';
+  const allowedOrigins = (process.env.CORS_ORIGIN || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 
   // CORS configuration (must be before helmet)
   app.enableCors({
-    origin: true,
+    origin: (origin, callback) => {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      if (
+        (!isProduction && allowedOrigins.length === 0) ||
+        allowedOrigins.includes('*') ||
+        allowedOrigins.includes(origin)
+      ) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error('CORS origin not allowed'));
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: [
       'Content-Type', 
@@ -70,21 +91,25 @@ async function bootstrap() {
   );
 
   // Swagger documentation
-  const config = new DocumentBuilder()
-    .setTitle(process.env.SWAGGER_TITLE || '123Tutors Dashboard API')
-    .setDescription(process.env.SWAGGER_DESCRIPTION || 'Backend API for 123Tutors Dashboard')
-    .setVersion(process.env.SWAGGER_VERSION || '1.0.0')
-    .addBearerAuth()
-    .build();
-  
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  if (!isProduction || process.env.ENABLE_SWAGGER === 'true') {
+    const config = new DocumentBuilder()
+      .setTitle(process.env.SWAGGER_TITLE || '123Tutors Dashboard API')
+      .setDescription(process.env.SWAGGER_DESCRIPTION || 'Backend API for 123Tutors Dashboard')
+      .setVersion(process.env.SWAGGER_VERSION || '1.0.0')
+      .addBearerAuth()
+      .build();
+
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document);
+  }
 
   const port = process.env.PORT || 8081;
   await app.listen(port);
   
   console.log(`🚀 Application is running on: http://localhost:${port}`);
-  console.log(`📚 Swagger documentation: http://localhost:${port}/api/docs`);
+  if (!isProduction || process.env.ENABLE_SWAGGER === 'true') {
+    console.log(`📚 Swagger documentation: http://localhost:${port}/api/docs`);
+  }
 }
 
 bootstrap();

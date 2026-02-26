@@ -3,22 +3,53 @@
 import type React from "react"
 
 import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { AlertCircle, Eye, EyeOff, CheckCircle } from "lucide-react"
+import {
+  AlertCircle,
+  BriefcaseBusiness,
+  CheckCircle,
+  Eye,
+  EyeOff,
+  GraduationCap,
+  ShieldCheck,
+  Users,
+} from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
+export type LoginRole = "student" | "tutor" | "bursary_admin" | "admin"
+
 interface AuthFormProps {
-  onLogin: (email: string) => void
+  onLogin: (email: string, role?: LoginRole) => void
   initialMode?: "login" | "signup"
   modeLock?: boolean
   compact?: boolean
+  loginRole?: LoginRole
+  onLoginRoleChange?: (role: LoginRole) => void
 }
 
-export function AuthForm({ onLogin, initialMode = "login", modeLock = false, compact = false }: AuthFormProps) {
+const loginRoleCards: Array<{
+  value: LoginRole
+  label: string
+  detail: string
+  icon: React.ComponentType<{ className?: string }>
+}> = [
+  { value: "student", label: "Student / Parent", detail: "Track requests and progress", icon: GraduationCap },
+  { value: "tutor", label: "Tutor", detail: "Manage sessions and jobs", icon: BriefcaseBusiness },
+  { value: "bursary_admin", label: "Bursary Admin", detail: "Run bursary operations", icon: Users },
+  { value: "admin", label: "Platform Admin", detail: "Oversee full system", icon: ShieldCheck },
+]
+
+export function AuthForm({
+  onLogin,
+  initialMode = "login",
+  modeLock = false,
+  compact = false,
+  loginRole = "student",
+  onLoginRoleChange,
+}: AuthFormProps) {
   const [isLogin, setIsLogin] = useState(initialMode !== "signup")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -33,9 +64,9 @@ export function AuthForm({ onLogin, initialMode = "login", modeLock = false, com
     setIsLogin(initialMode !== "signup")
   }, [initialMode])
 
-  const validateEmail = (email: string) => {
+  const validateEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
+    return emailRegex.test(value)
   }
 
   const validateForm = () => {
@@ -61,9 +92,8 @@ export function AuthForm({ onLogin, initialMode = "login", modeLock = false, com
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
     if (!validateForm()) return
 
     setIsLoading(true)
@@ -73,7 +103,6 @@ export function AuthForm({ onLogin, initialMode = "login", modeLock = false, com
 
     try {
       if (isLogin) {
-        // Sign in with Supabase
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -82,10 +111,9 @@ export function AuthForm({ onLogin, initialMode = "login", modeLock = false, com
         if (error) {
           setGeneralError(error.message)
         } else if (data.user) {
-          onLogin(data.user.email || email)
+          onLogin(data.user.email || email, loginRole)
         }
       } else {
-        // Sign up with Supabase
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -94,7 +122,7 @@ export function AuthForm({ onLogin, initialMode = "login", modeLock = false, com
         if (error) {
           setGeneralError(error.message)
         } else if (data.user) {
-          setSuccessMessage("Account created successfully! Please check your email to verify your account.")
+          setSuccessMessage("Account created successfully. Check your email to verify your account.")
           setIsLogin(true)
           setEmail("")
           setPassword("")
@@ -109,168 +137,178 @@ export function AuthForm({ onLogin, initialMode = "login", modeLock = false, com
   }
 
   return (
-    <div className={compact ? "p-4 sm:p-6" : "min-h-screen bg-white flex items-center justify-center p-4 sm:p-6 lg:p-8"}>
-      <div className="w-full max-w-md space-y-4 sm:space-y-6 mx-auto">
-        <div className="text-center space-y-2 sm:space-y-3">
-          <img
-            src="/images/123tutors-logo.png"
-            alt="123tutors"
-            className="h-12 w-12 sm:h-16 sm:w-16 mx-auto rounded-full object-cover border-2 border-[#FF0090]"
-          />
-          <h1 className="text-xl sm:text-2xl font-bold text-[#1f1b17]">123Tutors Portal</h1>
-          <p className="text-sm sm:text-base text-gray-600">
-            {isLogin ? "Sign in to your account" : "Create your account"}
-          </p>
+    <div className={compact ? "p-4 sm:p-6" : "min-h-screen p-4 sm:p-6"}>
+      <div className="relative mx-auto w-full max-w-xl overflow-hidden rounded-[1.75rem] border border-[#ff009033] bg-white/88 shadow-[0_24px_60px_rgba(54,23,45,0.16)]">
+        <div className="pointer-events-none absolute -left-24 -top-24 h-44 w-44 rounded-full bg-[#ff6bc740] blur-3xl" />
+        <div className="pointer-events-none absolute -right-24 top-24 h-52 w-52 rounded-full bg-[#ff009030] blur-3xl" />
+
+        <div className="relative z-10 border-b border-[#1f1b1724] px-5 pb-4 pt-6 sm:px-7 sm:pt-7">
+          <div className="flex items-center gap-4">
+            <img
+              src="/images/123tutors-logo.png"
+              alt="123Tutors"
+              className="h-14 w-14 rounded-2xl border border-[#ff009055] bg-white p-1 object-cover"
+            />
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#960056]">123Tutors Platform</p>
+              <h1 className="mt-1 text-xl font-semibold text-[#1f1b17]">{isLogin ? "Welcome back" : "Create account"}</h1>
+              <p className="text-sm text-[#5a534d]">
+                {isLogin ? "Sign in and continue where you left off." : "Set up your account in under a minute."}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <Card className="modern-panel bg-white/85 border-[rgba(31,27,23,0.14)] shadow-lg">
-          <CardHeader className="space-y-1 pb-3 sm:pb-4 px-4 sm:px-6">
-            <CardTitle className="text-lg sm:text-xl text-center text-[#960056]">
-              {isLogin ? "Welcome Back" : "Create Account"}
-            </CardTitle>
-            <CardDescription className="text-center text-sm sm:text-base">
-              {isLogin ? "Enter your credentials to access the dashboard" : "Fill in your details to create an account"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="px-4 sm:px-6">
-            {successMessage && (
-              <Alert className="mb-3 sm:mb-4 border-green-200 bg-green-50">
-                <CheckCircle className="h-4 w-4 text-green-600" />
-                <AlertDescription className="text-green-600 text-xs sm:text-sm">{successMessage}</AlertDescription>
-              </Alert>
-            )}
+        <div className="relative z-10 px-5 py-5 sm:px-7 sm:py-6">
+          {isLogin && onLoginRoleChange ? (
+            <div className="mb-5 space-y-2">
+              <Label className="text-sm font-medium text-[#3f3833]">Choose your role</Label>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {loginRoleCards.map((role) => {
+                  const Icon = role.icon
+                  const active = loginRole === role.value
+                  return (
+                    <button
+                      key={role.value}
+                      type="button"
+                      onClick={() => onLoginRoleChange(role.value)}
+                      className={`rounded-xl border px-3 py-3 text-left transition ${
+                        active
+                          ? "border-[#ff0090] bg-[#ff009015] shadow-[0_8px_20px_rgba(255,0,144,0.12)]"
+                          : "border-[#1f1b1724] bg-white hover:border-[#ff009066] hover:bg-[#ff00900a]"
+                      }`}
+                    >
+                      <div className="flex items-start gap-2">
+                        <span
+                          className={`mt-0.5 rounded-lg p-1.5 ${
+                            active ? "bg-[#ff009025] text-[#960056]" : "bg-[#f7f1f6] text-[#725f6b]"
+                          }`}
+                        >
+                          <Icon className="h-4 w-4" />
+                        </span>
+                        <div>
+                          <p className="text-sm font-semibold text-[#251f1a]">{role.label}</p>
+                          <p className="text-xs text-[#6b625b]">{role.detail}</p>
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          ) : null}
 
-            {generalError && (
-              <Alert className="mb-3 sm:mb-4 border-red-200 bg-red-50">
-                <AlertCircle className="h-4 w-4 text-red-600" />
-                <AlertDescription className="text-red-600 text-xs sm:text-sm">{generalError}</AlertDescription>
-              </Alert>
-            )}
+          {successMessage ? (
+            <Alert className="mb-4 border-green-200 bg-green-50">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <AlertDescription className="text-sm text-green-700">{successMessage}</AlertDescription>
+            </Alert>
+          ) : null}
 
-            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-              <div className="space-y-1 sm:space-y-2">
-                <Label htmlFor="email" className="text-gray-700 text-sm sm:text-base">
-                  Email Address
-                </Label>
+          {generalError ? (
+            <Alert className="mb-4 border-red-200 bg-red-50">
+              <AlertCircle className="h-4 w-4 text-red-600" />
+              <AlertDescription className="text-sm text-red-700">{generalError}</AlertDescription>
+            </Alert>
+          ) : null}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-sm font-medium text-[#3f3833]">
+                Email address
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className={`h-11 border-[#1f1b1726] bg-white/90 text-[15px] focus-visible:ring-[#ff009055] ${
+                  errors.email ? "border-red-500" : ""
+                }`}
+              />
+              {errors.email ? <p className="text-xs text-red-600">{errors.email}</p> : null}
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-sm font-medium text-[#3f3833]">
+                Password
+              </Label>
+              <div className="relative">
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={`border-gray-300 focus:border-[#FF0090] focus:ring-[#FF0090] text-sm sm:text-base ${
-                    errors.email ? "border-red-500" : ""
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className={`h-11 border-[#1f1b1726] bg-white/90 pr-10 text-[15px] focus-visible:ring-[#ff009055] ${
+                    errors.password ? "border-red-500" : ""
                   }`}
                 />
-                {errors.email && (
-                  <Alert className="py-1 sm:py-2 border-red-200 bg-red-50">
-                    <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-600" />
-                    <AlertDescription className="text-red-600 text-xs sm:text-sm">{errors.email}</AlertDescription>
-                  </Alert>
-                )}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-1 top-1 h-9 px-2 text-[#756a61] hover:bg-[#ff009011] hover:text-[#1f1b17]"
+                  onClick={() => setShowPassword((previous) => !previous)}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
               </div>
+              {errors.password ? <p className="text-xs text-red-600">{errors.password}</p> : null}
+            </div>
 
-              <div className="space-y-1 sm:space-y-2">
-                <Label htmlFor="password" className="text-gray-700 text-sm sm:text-base">
-                  Password
+            {!isLogin ? (
+              <div className="space-y-1.5">
+                <Label htmlFor="confirmPassword" className="text-sm font-medium text-[#3f3833]">
+                  Confirm password
                 </Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={`border-gray-300 focus:border-[#FF0090] focus:ring-[#FF0090] pr-10 text-sm sm:text-base ${
-                      errors.password ? "border-red-500" : ""
-                    }`}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-2 sm:px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
-                    ) : (
-                      <Eye className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
-                    )}
-                  </Button>
-                </div>
-                {errors.password && (
-                  <Alert className="py-1 sm:py-2 border-red-200 bg-red-50">
-                    <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-600" />
-                    <AlertDescription className="text-red-600 text-xs sm:text-sm">{errors.password}</AlertDescription>
-                  </Alert>
-                )}
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  className={`h-11 border-[#1f1b1726] bg-white/90 text-[15px] focus-visible:ring-[#ff009055] ${
+                    errors.confirmPassword ? "border-red-500" : ""
+                  }`}
+                />
+                {errors.confirmPassword ? <p className="text-xs text-red-600">{errors.confirmPassword}</p> : null}
               </div>
+            ) : null}
 
-              {!isLogin && (
-                <div className="space-y-1 sm:space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-gray-700 text-sm sm:text-base">
-                    Confirm Password
-                  </Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={`border-gray-300 focus:border-[#FF0090] focus:ring-[#FF0090] text-sm sm:text-base ${
-                      errors.confirmPassword ? "border-red-500" : ""
-                    }`}
-                  />
-                  {errors.confirmPassword && (
-                    <Alert className="py-1 sm:py-2 border-red-200 bg-red-50">
-                      <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-600" />
-                      <AlertDescription className="text-red-600 text-xs sm:text-sm">
-                        {errors.confirmPassword}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-              )}
+            <Button
+              type="submit"
+              className="h-11 w-full rounded-xl bg-gradient-to-r from-[#ff0090] to-[#ff4dae] text-sm font-semibold text-white hover:opacity-95"
+              disabled={isLoading}
+            >
+              {isLoading ? "Please wait..." : isLogin ? "Sign in to dashboard" : "Create account"}
+            </Button>
+          </form>
 
+          {!modeLock ? (
+            <div className="mt-5 text-center text-sm text-[#615852]">
+              {isLogin ? "No account yet?" : "Already have an account?"}
               <Button
-                type="submit"
-                className="w-full bg-[#FF0090] hover:bg-[#E6007A] text-white text-sm sm:text-base py-2 sm:py-3"
-                disabled={isLoading}
+                variant="link"
+                className="ml-1 h-auto p-0 font-semibold text-[#960056] hover:text-[#770046]"
+                onClick={() => {
+                  setIsLogin(!isLogin)
+                  setErrors({})
+                  setGeneralError("")
+                  setSuccessMessage("")
+                  setEmail("")
+                  setPassword("")
+                  setConfirmPassword("")
+                }}
               >
-                {isLoading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
+                {isLogin ? "Create one" : "Sign in"}
               </Button>
-            </form>
-
-            {!modeLock && (
-              <div className="mt-4 sm:mt-6 text-center">
-                <p className="text-xs sm:text-sm text-gray-600">
-                  {isLogin ? "Don't have an account?" : "Already have an account?"}
-                  <Button
-                    variant="link"
-                    className="p-0 ml-1 text-[#960056] hover:text-[#7a0046] text-xs sm:text-sm"
-                    onClick={() => {
-                      setIsLogin(!isLogin)
-                      setErrors({})
-                      setGeneralError("")
-                      setSuccessMessage("")
-                      setEmail("")
-                      setPassword("")
-                      setConfirmPassword("")
-                    }}
-                  >
-                    {isLogin ? "Sign up" : "Sign in"}
-                  </Button>
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <div className="text-center text-xs text-gray-500">
-          <p>© 2024 123tutors. All rights reserved.</p>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
   )
 }
+

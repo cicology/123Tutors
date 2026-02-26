@@ -4,8 +4,10 @@ import { SchoolNamesService } from './school-names.service';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { SearchDto } from '../common/dto/search.dto';
 import { SchoolName } from './school-names.entity';
+import { Public } from '../auth/public.decorator';
 
 @ApiTags('School Names')
+@Public()
 @Controller('school-names')
 export class SchoolNamesController {
   constructor(private readonly schoolNamesService: SchoolNamesService) {}

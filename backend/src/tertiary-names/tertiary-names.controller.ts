@@ -4,8 +4,10 @@ import { TertiaryNamesService } from './tertiary-names.service';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { SearchDto } from '../common/dto/search.dto';
 import { TertiaryName } from './tertiary-names.entity';
+import { Public } from '../auth/public.decorator';
 
 @ApiTags('Tertiary Names')
+@Public()
 @Controller('tertiary-names')
 export class TertiaryNamesController {
   constructor(private readonly tertiaryNamesService: TertiaryNamesService) {}

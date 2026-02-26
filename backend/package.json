@@ -11,6 +11,7 @@
     "bubble:extract": "node scripts/bubble-migration/extract.js",
     "bubble:transform": "node scripts/bubble-migration/transform.js",
     "bubble:load": "node scripts/bubble-migration/load.js",
+    "supabase:provision-auth-users": "node scripts/supabase-auth/provision-auth-users.js",
     "bubble:migrate": "npm run bubble:extract && npm run bubble:transform && npm run bubble:load",
     "schema:bootstrap": "ts-node -r tsconfig-paths/register src/scripts/bootstrap-schema.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

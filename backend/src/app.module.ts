@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { UserProfilesModule } from './user-profiles/user-profiles.module';
 import { BankModule } from './bank/bank.module';
 import { BursaryNamesModule } from './bursary-names/bursary-names.module';
@@ -36,14 +38,6 @@ import { PaymentsModule } from './payments/payments.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
-        // Debug: Log the environment variables
-        console.log('🔍 Environment Variables Debug:');
-        console.log('DB_HOST:', configService.get('DB_HOST'));
-        console.log('DB_PORT:', configService.get('DB_PORT'));
-        console.log('DB_USERNAME:', configService.get('DB_USERNAME'));
-        console.log('DB_DATABASE:', configService.get('DB_DATABASE'));
-        console.log('NODE_ENV:', configService.get('NODE_ENV'));
-        
         // Parse DB_HOST to handle both JDBC URLs and plain hostnames
         const dbHost = configService.get('DB_HOST', 'localhost');
         let host = dbHost;
@@ -58,7 +52,6 @@ import { PaymentsModule } from './payments/payments.module';
           const urlMatch = dbHost.match(/jdbc:postgresql:\/\/([^:]+)/);
           if (urlMatch) {
             host = urlMatch[1];
-            console.log('🔧 Extracted host from JDBC URL:', host);
           }
         }
         
@@ -87,15 +80,6 @@ import { PaymentsModule } from './payments/payments.module';
           }
               : false,
         };
-        
-        console.log('🔧 Final DB Config:', {
-          host: config.host,
-          port: config.port,
-          username: config.username,
-          database: config.database,
-          synchronize: config.synchronize,
-          ssl: config.ssl
-        });
         
         return config;
       },
@@ -126,6 +110,12 @@ import { PaymentsModule } from './payments/payments.module';
     NotificationsModule,
     AdminModule,
     PaymentsModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule {}

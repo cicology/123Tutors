@@ -15,10 +15,18 @@ import { UserProfilesModule } from '../user-profiles/user-profiles.module';
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET') || 'your-super-secret-jwt-key-change-this-in-production',
-        signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '24h' },
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const jwtSecret = configService.get<string>('JWT_SECRET');
+        const isProduction = configService.get<string>('NODE_ENV') === 'production';
+        if (!jwtSecret && isProduction) {
+          throw new Error('JWT_SECRET must be set in production');
+        }
+
+        return {
+          secret: jwtSecret || 'local-dev-secret-change-me',
+          signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '24h' },
+        };
+      },
       inject: [ConfigService],
     }),
   ],

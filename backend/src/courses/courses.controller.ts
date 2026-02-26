@@ -1,10 +1,11 @@
 import { Controller, Get, Post, Put, Delete, Param, Query, Body } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { CoursesService } from './courses.service';
 import { PaginationSearchDto } from '../common/dto/pagination-search.dto';
 import { Course } from './courses.entity';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { Public } from '../auth/public.decorator';
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -12,6 +13,7 @@ export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Get()
+  @Public()
   @ApiOperation({ summary: 'Get all courses with pagination and search' })
   @ApiResponse({ status: 200, description: 'courses retrieved successfully' })
   async findAll(
@@ -21,6 +23,7 @@ export class CoursesController {
   }
 
   @Get('active')
+  @Public()
   @ApiOperation({ summary: 'Get active courses' })
   @ApiResponse({ status: 200, description: 'Active courses retrieved successfully', type: [Course] })
   async findActive(): Promise<Course[]> {

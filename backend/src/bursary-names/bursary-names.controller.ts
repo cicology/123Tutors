@@ -11,13 +11,14 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiResponse, ApiConsumes } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBearerAuth } from '@nestjs/swagger';
 import { BursaryNamesService } from './bursary-names.service';
 import { CreateBursaryNameDto } from './dto/create-bursary-name.dto';
 import { UpdateBursaryNameDto } from './dto/update-bursary-name.dto';
 import { PaginationSearchDto } from '../common/dto/pagination-search.dto';
 import { BursaryName } from './bursary-names.entity';
 import { StorageService } from '../common/storage/storage.service';
+import { Public } from '../auth/public.decorator';
 
 @ApiTags('Bursary Names')
 @Controller('bursary-names')
@@ -28,14 +29,17 @@ export class BursaryNamesController {
   ) {}
 
   @Post()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new bursary organization' })
   @ApiResponse({ status: 201, description: 'Bursary created successfully', type: BursaryName })
   @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async create(@Body() createBursaryNameDto: CreateBursaryNameDto): Promise<BursaryName> {
     return await this.bursaryNamesService.create(createBursaryNameDto);
   }
 
   @Get()
+  @Public()
   @ApiOperation({ summary: 'Get all bursary organizations with pagination and search' })
   @ApiResponse({ status: 200, description: 'Bursaries retrieved successfully' })
   async findAll(

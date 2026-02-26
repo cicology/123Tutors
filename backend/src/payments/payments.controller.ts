@@ -1,5 +1,6 @@
 import { Body, Controller, Headers, Post, Req } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Public } from '../auth/public.decorator';
 import { VerifyPaystackPaymentDto } from './dto/verify-paystack-payment.dto';
 import { PaymentsService } from './payments.service';
 
@@ -9,6 +10,7 @@ export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Post('paystack/verify')
+  @Public()
   @ApiOperation({ summary: 'Verify a Paystack transaction and reconcile invoice/request status' })
   @ApiResponse({ status: 200, description: 'Payment verification processed successfully' })
   verifyPaystackPayment(@Body() dto: VerifyPaystackPaymentDto) {
@@ -16,6 +18,7 @@ export class PaymentsController {
   }
 
   @Post('paystack/webhook')
+  @Public()
   @ApiOperation({ summary: 'Handle Paystack webhook callbacks' })
   @ApiResponse({ status: 200, description: 'Webhook received and processed' })
   handlePaystackWebhook(
