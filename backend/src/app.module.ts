@@ -112,10 +112,11 @@ import { PaymentsModule } from './payments/payments.module';
     PaymentsModule,
   ],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    // Global auth guard temporarily disabled for debugging
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
   ],
 })
 export class AppModule {}
