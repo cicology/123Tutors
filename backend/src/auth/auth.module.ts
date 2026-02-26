@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { SupabaseAuthGuard } from './supabase-auth.guard';
 import { BursaryAdminGuard } from './bursary-admin.guard';
 import { UserProfilesModule } from '../user-profiles/user-profiles.module';
 
@@ -31,7 +32,7 @@ import { UserProfilesModule } from '../user-profiles/user-profiles.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, JwtAuthGuard, BursaryAdminGuard],
-  exports: [AuthService, JwtAuthGuard, BursaryAdminGuard],
+  providers: [AuthService, JwtStrategy, JwtAuthGuard, SupabaseAuthGuard, BursaryAdminGuard],
+  exports: [AuthService, JwtAuthGuard, SupabaseAuthGuard, BursaryAdminGuard],
 })
 export class AuthModule {}
